@@ -10,7 +10,11 @@ try
     var serviceProvider = ConfigureServices();
     var lectureManagerService = serviceProvider.GetRequiredService<ILectureManagerService>();
 
-    string filePath = "lectures.txt";
+    string? projectBasePath = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory)?.Parent?.Parent?.Parent?.FullName;
+    if (projectBasePath == null)
+        throw new DirectoryNotFoundException("Project base path not found.");
+
+    string filePath = Path.Combine(projectBasePath, "Data", "lectures.txt");
     if (!File.Exists(filePath))
         throw new FileNotFoundException($"File {filePath} not found in the system.");
 
